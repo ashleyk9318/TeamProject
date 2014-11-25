@@ -19,18 +19,22 @@ Group Number 6? or 11?
 #include <sstream>
 #include "SchoolDatabase.h"
 
+
 using namespace std;
 
 //function protypes
 
 void display_menu();
-void process_input_file();/// still incomplete and may need parameters
+void build_SchoolDataBase(SchoolDatabase<string> *);/// still incomplete and may need parameters
 /// seperate function to write to output file
 
 int main()
 {
-    SchoolDatabase<string> obj; //can rename object later
+    SchoolDatabase<string> *schoolList = new SchoolDatabase<string>(); //can rename object later
     int command;
+
+                    cout<<"REMOVE PROCESS INPUT FILE CALL AT TOP OF MAIN LATER!!!!"<<endl;
+                    build_SchoolDataBase(schoolList);//temp
 
     do
     {
@@ -115,10 +119,11 @@ void display_menu()
 ///process_input_file()
 /// -add description later-----------
 ///******************************************************
-void process_input_file()
+void build_SchoolDataBase(SchoolDatabase<string> *Sptr)
 {
     ifstream infile;
-    infile.open("inputFile.txt");
+    infile.open("CA_schools.txt");
+    string fileData;
 
     if(!infile)//if file does not open successfully
     {
@@ -126,5 +131,30 @@ void process_input_file()
         return;
     }
 
+
+        string code;
+        string schoolName;
+        string cityName;
+        string apiScore_string;
+        int apiScore_int;
+
+
+    while(getline(infile, code))
+    {
+        getline(infile, schoolName);
+        getline(infile, cityName);
+        getline(infile, apiScore_string);
+        apiScore_int = atoi(apiScore_string.c_str());
+
+        cout<<"code:"<<code<<endl;
+        cout<<"schoolName:"<<schoolName<<endl;
+        cout<<"cityName:"<<cityName<<endl;
+        cout<<"apiScore:"<<apiScore_int<<endl;
+
+        Sptr->insert(code, schoolName, cityName, apiScore_int);
+
+    }
+
     infile.close();
 }
+
