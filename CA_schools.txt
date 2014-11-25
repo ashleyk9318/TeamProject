@@ -1,40 +1,160 @@
-2664	El Monte High	Los Angeles	713
-0013	Lindhurst High	Yuba	691
-2680	Mountain View High	Los Angeles	667
-0665	J. Haley Durham Elementary	Alameda	844
-8308	Adaline E. Kent Middle	Marin	939
-4462	Monta Vista High	Santa Clara	956
-3503	Maxwell Elementary	Colusa	772
-8056	Dows Prairie Elementary	Humboldt	800
-7627	Leo B. Hart Elementary	Kern	777
-3115	John F. Kennedy High	Orange	856
-8064	McKinleyville Middle	Humboldt	809
-7504	Williams High	Colusa	653
-2943	Biggs Elementary	Butte	667
-0990	Solorsano Middle	Santa Clara	840
-0320	Arroyo High	Los Angeles	773
-0229	Alameda High	Alameda	819
-1643	Jefferson Elementary	Sonoma	770
-0446	Centennial High	Riverside	803
-7346	Sandia Elementary	San Bernardino	749
-0586	Lee V. Pollard High	Riverside	636
-1509	Calaveras High	Calaveras	766
-0701	Santiago High	Riverside	810
-1361	Fort Bragg High	Mendocino	784
-1632	Dewolf Continuation High	Fresno	442
-7805	South Tahoe High	El Dorado	753
-5647	Herbert Hoover Middle	Merced	731
-6123	Westmont Elementary	Orange	756
-1519	Pleasant Grove Middle	El Dorado	898
-2911	Herbert Hoover High	Fresno	703
-8970	Heritage Elementary	San Diego	923
-7481	Rosemead High	Los Angeles	807
-8919	Fernando R. Ledesma Continuation High	Los Angeles	519
-8988	McMillin (Corky) Elementary	San Diego	907
-2565	New Vision High	San Joaquin	472
-1478	Coronado High	San Diego	877
-8305	Wheatland Union High	Yuba	767
-0126	Ingrid B. Lacy Middle	San Mateo	820
-3657	Pacific Grove High	Monterey	842
-6203	Owens Valley High	Inyo	790
-0827	Biggs High	Butte	666
+2664
+El Monte High
+Los Angeles
+713
+0013
+Lindhurst High
+Yuba
+691
+2680
+Mountain View High
+Los Angeles
+667
+0665
+J. Haley Durham Elementary
+Alameda
+844
+8308
+Adaline E. Kent Middle
+Marin
+939
+4462
+Monta Vista High
+Santa Clara
+956
+3503
+Maxwell Elementary
+Colusa
+772
+8056
+Dows Prairie Elementary
+Humboldt
+800
+7627
+Leo B. Hart Elementary
+Kern
+777
+3115
+John F. Kennedy High
+Orange
+856
+8064
+McKinleyville Middle
+Humboldt
+809
+7504
+Williams High
+Colusa
+653
+2943
+Biggs Elementary
+Butte
+667
+0990
+Solorsano Middle
+Santa Clara
+840
+0320
+Arroyo High
+Los Angeles
+773
+0229
+Alameda High
+Alameda
+819
+1643
+Jefferson Elementary
+Sonoma
+770
+0446
+Centennial High
+Riverside
+803
+7346
+Sandia Elementary
+San Bernardino
+749
+0586
+Lee V. Pollard High
+Riverside
+636
+1509
+Calaveras High
+Calaveras
+766
+0701
+Santiago High
+Riverside
+810
+1361
+Fort Bragg High
+Mendocino
+784
+1632
+Dewolf Continuation High
+Fresno
+442
+7805
+South Tahoe High
+El Dorado
+753
+5647
+Herbert Hoover Middle
+Merced
+731
+6123
+Westmont Elementary
+Orange
+756
+1519
+Pleasant Grove Middle
+El Dorado
+898
+2911
+Herbert Hoover High
+Fresno
+703
+8970
+Heritage Elementary
+San Diego
+923
+7481
+Rosemead High
+Los Angeles
+807
+8919
+Fernando R. Ledesma Continuation High
+Los Angeles
+519
+8988
+McMillin (Corky) Elementary
+San Diego
+907
+2565
+New Vision High
+San Joaquin
+472
+1478
+Coronado High
+San Diego
+877
+8305
+Wheatland Union High
+Yuba
+767
+0126
+Ingrid B. Lacy Middle
+San Mateo
+820
+3657
+Pacific Grove High
+Monterey
+842
+6203
+Owens Valley High
+Inyo
+790
+0827
+Biggs High
+Butte
+666
