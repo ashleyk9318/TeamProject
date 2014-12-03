@@ -1,28 +1,46 @@
+// Team 6
+// Neesha B, Daksha D, Viktoriia P, Jane S, Ashley K
+// CIS 22C Fall 14
+
 #ifndef _HASHED_TABLE
 #define _HASHED_TABLE
-
-#define HASHTABLESIZE 83 // CHANGE OR DELETE IF NEEDED
 
 #include "LinkedList.h"
 #include "School.h"
 #include <cmath>
 #include <string>
+#include <fstream>
+
+#define LOAD_FACTOR 75
 
 class HashedTable
 {
 	private:
-		LinkedList<School>* hashTable;
-		int getHashIndex(string input);		
-	
+		int arraySize;
+
+		LinkedList<SchoolPtrContainer>* hashTable;
+		int getHashIndex(string input);
+		int calcNextPrimeNumberAfter(int size);
+		void resizeAndRehash();
+
 	public:
 		// Constructor, with dynamically allocated hash table
-		HashedTable() {hashTable = new LinkedList<School>[HASHTABLESIZE];}
+		HashedTable(int size)
+		{
+			arraySize = calcNextPrimeNumberAfter(size);
+			hashTable = new LinkedList<SchoolPtrContainer>[arraySize]; 
+		}
+
 		// Destructor
 		~HashedTable();
-		void addToTable(School& movie); 
-		bool findSchool(School& search, School& returnFilm);
+		void addToTable(const SchoolPtrContainer& schoolPtr); 
+		bool findSchool(const SchoolPtrContainer& search, SchoolPtrContainer& returnSchool);
+        bool removeSchool(const SchoolPtrContainer& removed);
 		void displayList();
 		void printHashTable();
+		void writeHashTable(string filename);
+        void writeHashTable(ofstream& outfile, void visit(SchoolPtrContainer&, ofstream&) );
+		int getTableSize();
 
 		// The statistics functions
 		double calcLoadFactor();
@@ -39,8 +57,94 @@ class HashedTable
 
 HashedTable::~HashedTable()
 {
-	for (int i = 0 ; i < HASHTABLESIZE; i++)
+	for (int i = 0 ; i < arraySize; i++)
 		hashTable[i].clear();  
+
+    hashTable;
+}
+
+//*******************************************************
+// Return the size of the array NOT the number of       *
+// elements.                                            *
+//*******************************************************
+
+int HashedTable::getTableSize() 
+{
+	return arraySize;
+}
+
+//*******************************************************
+// Given a size, check what is the next prime number    *
+// after it. If the given size parameter is already a   *
+// prime number then we do not need to find the next    *
+// prime number.                                        *
+//*******************************************************
+
+int HashedTable::calcNextPrimeNumberAfter(int size)
+{
+	while (true) {
+		bool isPrime = false;
+
+		if (size < 2) {
+			isPrime = false;
+		}
+		else {
+			for (int i = 2; true; ++i) {
+				int q = size / i;
+
+				if (q < i) {
+					isPrime = true;
+					break;
+				}
+
+				if (size == q * i) {
+					isPrime = false;
+					break;
+				}
+			}
+		}
+
+		if (isPrime) {
+			break;
+		}
+
+		size++;
+	}
+
+	return size;
+}
+
+//*******************************************************
+// Resizing is doubling the array size and finding the  *
+// closest prime number which will be used as the actual*
+// size. The current elements are then re-hashed and    *
+// into the new array discarding the old one.           *
+//*******************************************************
+
+void HashedTable::resizeAndRehash() 
+{
+	HashedTable newHashTable(arraySize * 2);
+
+	for (int i = 0; i < arraySize; i++) {
+		for (int j = 0; j < hashTable[i].getItemCount(); j++) {
+			SchoolPtrContainer school;
+			
+			if (hashTable[i].getEntry(j, school)) {                
+				newHashTable.addToTable(school);
+            } 
+		}
+	}
+
+	for (int i = 0; i < arraySize; i++)
+		hashTable[i].clear();
+
+	arraySize = newHashTable.arraySize;
+	hashTable = newHashTable.hashTable;
+
+    // Detach hashtable
+    newHashTable.arraySize = 0;
+    newHashTable.hashTable = NULL;
+    // otherwise desctructor of newHashTable will destroy rehashed data
 }
 
 //*******************************************************
@@ -52,7 +156,7 @@ HashedTable::~HashedTable()
 //*******************************************************
 
 int HashedTable::getHashIndex(string input)
-{
+{		
 	int index = 0;
 	int cube;
 
@@ -62,8 +166,8 @@ int HashedTable::getHashIndex(string input)
 		index += cube;
 	}
 	
-	if (index >= HASHTABLESIZE)
-		index = index % HASHTABLESIZE;
+	if (index >= arraySize)
+		index = index % arraySize;
 
 	return index;
 }
@@ -72,14 +176,18 @@ int HashedTable::getHashIndex(string input)
 // The addToTable function uses the getHashIndex		*
 // function to find which index to add into, and then	*
 // calls the insert function from LinkedList.h to insert*
-// into linked list.									*
+// into linked list. If the load factor reaches 75% then*
+// The hash table expands                               *
 //*******************************************************
 
-void HashedTable::addToTable(School& school)
+void HashedTable::addToTable(const SchoolPtrContainer& schoolPtr)
 {
 	int index;	
-	index = getHashIndex(school.get_Code());
-	hashTable[index].insert(school);
+	index = getHashIndex(schoolPtr.getSchool()->get_Code());
+	hashTable[index].insert(schoolPtr);
+
+	if (calcLoadFactor() >= LOAD_FACTOR)
+		resizeAndRehash();
 }
 
 //*******************************************************
@@ -88,9 +196,18 @@ void HashedTable::addToTable(School& school)
 // the item.											*
 //*******************************************************
 
-bool HashedTable::findSchool(School& search, School& returnSchool)
+bool HashedTable::findSchool(const SchoolPtrContainer& search, SchoolPtrContainer& returnSchool)
 {
-	return hashTable[getHashIndex(search.get_Code())].getEntry(search, returnSchool);
+    int index;	
+	index = getHashIndex(search.getSchool()->get_Code());
+	return hashTable[index].getEntry(search, returnSchool);
+}
+
+bool HashedTable::removeSchool(const SchoolPtrContainer& removed)
+{
+    int index;	
+	index = getHashIndex(removed.getSchool()->get_Code());    
+	return hashTable[index].remove(removed);
 }
 
 //*******************************************************
@@ -101,7 +218,7 @@ bool HashedTable::findSchool(School& search, School& returnSchool)
 
 void HashedTable::displayList()
 {
-	for(int i = 0; i < HASHTABLESIZE; i++)
+	for(int i = 0; i < arraySize; i++)
 		hashTable[i].display();
 }
 
@@ -113,11 +230,47 @@ void HashedTable::displayList()
 
 void HashedTable::printHashTable()
 {
-	for(int i = 0; i < HASHTABLESIZE; i++)
+	for (int i = 0; i < arraySize; i++)
 	{
 		cout << "Index " << i << ": ";
-		hashTable[i].indentedList();
+		cout << hashTable[i].indentedList();
 		cout << endl;
+	}
+}
+
+//*******************************************************
+// The writeHashTable function writes all of the items  *
+// in the hash table into a file                        *
+//*******************************************************
+
+void HashedTable::writeHashTable(string filename)
+{
+	ofstream outFile;
+	outFile.open(filename.c_str());
+
+	for (int i = 0; i < arraySize; i++)
+	{
+		outFile << "Index " << i << ": ";
+		outFile << hashTable[i].indentedList();
+		outFile << endl;
+	}
+
+	outFile.close();
+}
+
+void HashedTable::writeHashTable(ofstream& outfile, void visit(SchoolPtrContainer&, ofstream&) )
+{
+	for (int i = 0; i < arraySize; i++)
+	{
+		for (int j = 0; j < hashTable[i].getItemCount(); j++)
+		{
+			SchoolPtrContainer school;
+			
+			if (hashTable[i].getEntry(j, school))
+            {
+                visit(school, outfile);
+            }
+		}	
 	}
 }
 
@@ -130,12 +283,12 @@ double HashedTable::calcLoadFactor()
 {
 	int counter = 0;
 	double loadFactor;
-	for(int i = 0; i < HASHTABLESIZE; i++)
+	for (int i = 0; i < arraySize; i++)
 	{
 		if(hashTable[i].getItemCount() > 0)
 			counter++;
 	}
-	loadFactor = static_cast<double>(counter) / HASHTABLESIZE * 100;
+	loadFactor = static_cast<double>(counter) / arraySize * 100;
 	return loadFactor;
 }
 
@@ -148,7 +301,7 @@ double HashedTable::calcLoadFactor()
 int HashedTable::collisions()
 {
 	int numCollisions = 0;
-	for(int i = 0; i < HASHTABLESIZE; i++)
+	for (int i = 0; i < arraySize; i++)
 	{
 		if(hashTable[i].getItemCount() > 0)
 			numCollisions += hashTable[i].getItemCount() - 1;
@@ -165,16 +318,16 @@ void HashedTable::longestLinkedList()
 {
 	int longest = 0;
 	
-	for(int i = 0; i < HASHTABLESIZE; i++)
+	for (int i = 0; i < arraySize; i++)
 	{
 		if(hashTable[i].getItemCount() > longest)
 			longest = hashTable[i].getItemCount();
 	}
-	for(int i = 0; i < HASHTABLESIZE; i++)
+	for (int i = 0; i < arraySize; i++)
 	{
 		if(hashTable[i].getItemCount() == longest)
 		{
-			hashTable[i].indentedList();
+			cout << hashTable[i].indentedList();
 			cout << endl;
 		}
 	}
@@ -189,7 +342,7 @@ int HashedTable::amountLinkedLists()
 {
 	int numLinkedLists = 0;
 	
-	for(int i = 0; i < HASHTABLESIZE; i++)
+	for (int i = 0; i < arraySize; i++)
 	{
 		if(hashTable[i].getItemCount() > 1)
 			numLinkedLists++;
