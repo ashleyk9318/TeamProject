@@ -1,13 +1,11 @@
-// Binary tree abstract base class
-// Created by Frank M. Carrano and Tim Henry.
-// Modified by:
+// Team 6
+// Neesha B, Daksha D, Viktoriia P, Jane S, Ashley K
+// CIS 22C Fall 14
 
 #ifndef _BINARY_TREE
 #define _BINARY_TREE
 
 #include "BinaryNode.h"
-using namespace std;
-
 
 template<class ItemType>
 class BinaryTree
@@ -19,171 +17,104 @@ protected:
 public:
 	// "admin" functions
  	BinaryTree() {rootPtr = 0; count = 0;}
-    BinaryTree(const BinaryTree<ItemType> & tree){}
-	virtual ~BinaryTree() { }
+	BinaryTree(const BinaryTree<ItemType> & tree){rootPtr = copyTree(tree.rootPtr);}
+	virtual ~BinaryTree() {destroyTree(rootPtr); rootPtr = 0; count = 0;} 
 	BinaryTree & operator = (const BinaryTree & sourceTree);
-
+   
 	// common functions for all binary trees
  	bool isEmpty() const	{return count == 0;}
 	int size() const	    {return count;}
-    BinaryNode<ItemType>* root() const {return rootPtr;}
 	void clear()			{destroyTree(rootPtr); rootPtr = 0; count = 0;}
-	void preOrder(void visit(ItemType &)) const {_preorder(visit, rootPtr);}
-	void inOrder(void visit(ItemType &)) const  {_inorder(visit, rootPtr);}
-	void postOrder(void visit(ItemType &)) const{_postorder(visit, rootPtr);}
-    void printIndented() const { _printIndented(rootPtr, 0);}
-    void printGreater(const ItemType & target) const {_printGreater(rootPtr, target);}
-    void breadthTraversal() const {_breadthTraversal(rootPtr);}
+	void inOrder(void visit(ItemType &)) const  {_inorder(visit, rootPtr);} //~*~*~*~ADDED*~*~*~*~*~//
 
 	// abstract functions to be implemented by derived class
-	virtual bool insert(const ItemType & newData) = 0;
-	virtual bool remove(const ItemType & data) = 0;
-	virtual bool getEntry(const ItemType & anEntry, ItemType & returnedItem) const = 0;
+	virtual bool insert(const ItemType & newData) = 0; 
+	virtual bool remove(const ItemType & data) = 0; 
 
-private:
+private:   
 	// delete all nodes from the tree
 	void destroyTree(BinaryNode<ItemType>* nodePtr);
 
 	// copy from the tree rooted at nodePtr and returns a pointer to the copy
 	BinaryNode<ItemType>* copyTree(const BinaryNode<ItemType>* nodePtr);
-
+   
 	// internal traverse
-	void _preorder(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const;
-	void _inorder(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const;
-	void _postorder(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const;
-    void _printIndented(BinaryNode<ItemType>* nodePtr, int tabs) const;
-    void _printGreater(BinaryNode<ItemType>* nodePtr, const ItemType & target) const;
-    void _breadthTraversal(BinaryNode<ItemType>* nodePtr) const;
+	void _inorder(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const; //~*~*~*~ADDED*~*~*~*~*~//
 
-};
+}; 
 
 //////////////////////////////////////////////////////////////////////////
 
+//**************************************************
+// The copyTree function copies the tree's nodes   *
+// by preorder traversal, using nodePtr.           *
+//**************************************************
 template<class ItemType>
-BinaryNode<ItemType>* BinaryTree<ItemType>::copyTree(const BinaryNode<ItemType>* nodePtr)
+BinaryNode<ItemType>* BinaryTree<ItemType>::copyTree(const BinaryNode<ItemType>* nodePtr) 
 {
-    if (nodePtr != 0) { //if not equal to 0
-        insert(nodePtr->getItem()); //putting the item into the tree
-        copyTree(nodePtr->getLeftPtr());
-        copyTree(nodePtr->getRightPtr());
-    }
-    return rootPtr;
-}
+	BinaryNode<ItemType>* newNodePtr = 0;
+	
+	// Copy tree nodes during a preorder traversal
+	if (nodePtr != 0)
+	{
+		newNodePtr = new BinaryNode<ItemType>(nodePtr->getItem());
+		newNodePtr->setLeftPtr(copyTree(nodePtr->getLeftPtr()));
+		newNodePtr->setRightPtr(copyTree(nodePtr->getRightPtr()));
+	} 
+	// Else tree is empty (newNodePtr is 0)
+
+    return newNodePtr;
+}  
+
+//**************************************************
+// The destroyTree deletes the existing tree by    *
+// using nodePtr to traverse the tree.             *
+//**************************************************
 
 template<class ItemType>
 void BinaryTree<ItemType>::destroyTree(BinaryNode<ItemType>* nodePtr)
 {
-    if (nodePtr != 0) { //checking node pointer is not equal to 0
-        destroyTree(nodePtr->getLeftPtr());
-        destroyTree(nodePtr->getRightPtr());
-        delete nodePtr;
-    }
-}
-
-template<class ItemType>
-void BinaryTree<ItemType>::_preorder(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const
-{
 	if (nodePtr != 0)
 	{
-		ItemType item = nodePtr->getItem();
-		visit(item); //printing out the tree in the needed order
-		_preorder(visit, nodePtr->getLeftPtr());
-		_preorder(visit, nodePtr->getRightPtr());
+		destroyTree(nodePtr->getLeftPtr());
+		destroyTree(nodePtr->getRightPtr());
+		delete nodePtr;
 	}
-}
+}  
+
+//**************************************************
+// The _inorder function takes void visit and      *
+// nodePtr from inOrder function, and traverses    *
+// the tree in in-order using recursion.           *
+//**************************************************
 
 template<class ItemType>
 void BinaryTree<ItemType>::_inorder(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const
 {
-    if (nodePtr != 0)
-    {
-        _inorder(visit, nodePtr->getLeftPtr());
-        ItemType item = nodePtr->getItem();
-        visit(item);
-        _inorder(visit, nodePtr->getRightPtr());
+	if (nodePtr != 0)
+	{
+		_inorder(visit, nodePtr->getLeftPtr());
+		ItemType item = nodePtr->getItem();
+		visit(item);
+		_inorder(visit, nodePtr->getRightPtr());
+	}
+}  //~*~*~*~ADDED ENTIRE FUNCTION*~*~*~*~*~//
 
-    }
-
-}
-
-template<class ItemType>
-void BinaryTree<ItemType>::_postorder(void visit(ItemType &), BinaryNode<ItemType>* nodePtr) const
-{
-    if (nodePtr != 0)
-    {
-        _postorder(visit, nodePtr->getLeftPtr());
-        _postorder(visit, nodePtr->getRightPtr());
-        ItemType item = nodePtr->getItem();
-        visit(item);
-    }
-
-}
+//**************************************************
+// The overloaded assignment function.	           *
+//**************************************************
 
 template<class ItemType>
 BinaryTree<ItemType> & BinaryTree<ItemType>::operator=(const BinaryTree<ItemType> & sourceTree)
 {
-    clear();
-    copyTree(sourceTree.root());
+	if(this != &sourceTree)
+	{
+		this->clear();
+        rootPtr=copyTree(sourceTree.rootPtr);
+        count=sourceTree.count;
+    }
     return *this;
-
-}
-
-template<class ItemType>
-void BinaryTree<ItemType>::_printIndented(BinaryNode<ItemType>* nodePtr, int tabs) const {
-    if (nodePtr != 0) {
-
-        for (int i = 0; i < tabs; i++) {
-            cout << "\t";
-        }
-        cout << tabs + 1 << ". ";
-        cout << nodePtr->getItem() << "\n";
-        _printIndented(nodePtr->getRightPtr(), tabs + 1); //printing out the requested number
-        _printIndented(nodePtr->getLeftPtr(), tabs + 1);
-    }
-}
-
-template<class ItemType>
-void BinaryTree<ItemType>::_printGreater(BinaryNode<ItemType>* nodePtr, const ItemType &target) const {
-
-	if (nodePtr != 0) {
-		//getting the item
-        if (nodePtr->getItem().substr(0,4) > target) {
-            cout << nodePtr->getItem() << " \n";
-        }
-        _printGreater(nodePtr->getLeftPtr(), target);
-        _printGreater(nodePtr->getRightPtr(), target);
-    }
-
-}
-
-template<class ItemType>
-void BinaryTree<ItemType>::_breadthTraversal(BinaryNode<ItemType> *nodePtr) const {
-    int length = 1;
-    int counter = 0; //variables to keep track of the counters
-
-    void *arr[20];
-    arr[0] = nodePtr;
-
-    while (counter < length) {
-
-        BinaryNode<ItemType> *node = static_cast<BinaryNode<ItemType> *>(arr[counter]);
-        std::cout << node->getItem() << "\n";
-
-        //checking if the left pointer is equal to null or not
-        if (node->getLeftPtr() != 0) {
-            arr[length] = node->getLeftPtr();
-            length++;
-        }
-
-        //checking the right pointer, if its null
-        if (node->getRightPtr() != 0) {
-            arr[length] = node->getRightPtr();
-            length++;
-        }
-        counter++; //increment
-    }
-}
-
+}  
 
 #endif
 
