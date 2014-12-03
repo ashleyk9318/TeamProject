@@ -13,6 +13,13 @@ using namespace std;
 #include "BinarySearchTree.h"
 #include "Stack.h"
 
+void programmers () {
+	cout << "Welcome to Schools in CA Program.\n"
+		 << "CIS 22C Fall 14\n"
+		 << "Team 6\n"
+		 << "Neesha B, Daksha D, Ashley K, Viktoriia P, Jane S\n\n";
+}
+
 void deleteSchool(SchoolPtrContainer& schoolPtr)
 {
     schoolPtr.freeMemory();
@@ -248,12 +255,13 @@ void SchoolDataStorage::undoDelete()
         cout << "  " << school << endl << endl;
 
     } else {
-        cout << endl << "There is no deleted school" << endl << endl;
+        cout << endl << "There is no more school to restore!" << endl << endl;
     }
 }
 
 int main(void)
 {
+	programmers();
     SchoolDataStorage schools;
     schools.readFromFile("CA_schools.txt");
 
@@ -263,7 +271,7 @@ int main(void)
         cout << "Main Menu" << endl;
         cout << "(A). Add new data" << endl;
         cout << "(D). Delete data" << endl;
-        cout << "(S). Search and display one element using the primary key" << endl;
+        cout << "(F). Find and display one element using the primary key" << endl;
         cout << "(H). List data in hash table sequence" << endl;
         cout << "(L). List data in key sequence (sorted)" << endl;
         cout << "(T). Print indented tree" << endl;
@@ -276,34 +284,34 @@ int main(void)
         
         switch(toupper(choice))
         {
-            case 1:
+            case 'A':
                 schools.addNewData();
                 break;
-            case 2:
+            case 'D':
                 schools.removeData();
                 break;
-            case 3:                
+            case 'F':                
                 schools.findAndDisplay();
                 break;
-            case 4:
+            case 'H':
                 schools.printHashedData();
                 break;
-            case 5:
+            case 'L':
                 schools.printSortedData();
                 break;
-            case 6:
+            case 'T':
                 schools.printIntendedTree();
                 break;
-            case 7:
+            case 'W':
                 schools.writeToFile("CA_schools_output.txt");
                 break;
-            case 8:
+            case 'S':
                 schools.printHashStatistic();
                 break;
-            case 9:
+            case 'U':
                 schools.undoDelete();
                 break;
-            case 0:
+            case 'Q':
                 // exit
                 cout << endl << "Bye!" << endl;
                 break;            
