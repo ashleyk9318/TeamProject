@@ -1,6 +1,6 @@
-// Team #6
+// Team 6
+// Neesha B, Daksha D, Viktoriia P, Jane S, Ashley K
 // CIS 22C Fall 14
-// Jane Shin, Neesha Bhardwaj, Ashley Kim, Daksha Divakar, Viktoriia Petrusha
 
 /**~*~*
    Stack template
