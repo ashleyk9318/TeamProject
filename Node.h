@@ -1,3 +1,7 @@
+// Team 6
+// Neesha B, Daksha D, Viktoriia P, Jane S, Ashley K
+// CIS 22C Fall 14
+
 #ifndef _NODE
 #define _NODE
 
