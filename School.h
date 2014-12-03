@@ -1,3 +1,7 @@
+// Team 6
+// Neesha B, Daksha D, Viktoriia P, Jane S, Ashley K
+// CIS 22C Fall 14
+
 #ifndef _SCHOOL
 #define _SCHOOL
 
@@ -30,6 +34,10 @@ class School
 		bool operator == (const School& right) {return this->code == right.code;}
 		bool operator != (const School& right) {return this->code != right.code;}
 		friend ostream& operator << (ostream& os, const School& input);
+
+        // Overloaded operators help compare within binary search tree
+		bool operator < (const School& right){return this->code < right.code;}
+		bool operator > (const School& right){return this->code > right.code;}
 };
 
 ostream& operator << (ostream& os, const School& input)
@@ -37,6 +45,43 @@ ostream& operator << (ostream& os, const School& input)
 	// Might slightly change display format later
 	os << input.code << ", " << input.name <<  ", " << input.city	
 		<<  ", " << input.apiScore;
+	return os;
+}
+
+class SchoolPtrContainer
+{
+    School* school;
+public:
+    SchoolPtrContainer() { school = 0; };
+    SchoolPtrContainer(School* school)
+    {
+        this->school = school;
+    }
+
+    void freeMemory()
+    {
+        if (school)
+        {
+            delete school;
+            school = 0;
+        }
+    }
+
+    const School* getSchool() const { return school; };
+
+    bool operator == (const SchoolPtrContainer& right) { return (*school) == (*(right.getSchool())); }
+    bool operator != (const SchoolPtrContainer& right) { return (*school) != (*(right.getSchool())); }
+     // Overloaded operators help compare within binary search tree
+    bool operator < (const SchoolPtrContainer& right){ return (*school) < (*(right.getSchool())); }
+	bool operator > (const SchoolPtrContainer& right){ return (*school) > (*(right.getSchool())); }
+
+    friend ostream& operator << (ostream& os, const SchoolPtrContainer& input);
+};
+
+ostream& operator << (ostream& os, const SchoolPtrContainer& input)
+{
+	// Might slightly change display format later
+	os << *(input.getSchool());
 	return os;
 }
 
