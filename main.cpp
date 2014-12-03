@@ -25,9 +25,9 @@ void printSchool(SchoolPtrContainer& schoolPtr)
 
 void writeSchoolToFile(SchoolPtrContainer& schoolPtr, ofstream& os)
 {
-    os << schoolPtr.getSchool()->get_Code() << endl;
-    os << schoolPtr.getSchool()->get_SchoolName() << endl;
-    os << schoolPtr.getSchool()->get_City() << endl;
+    os << schoolPtr.getSchool()->get_Code() << "\t";
+    os << schoolPtr.getSchool()->get_SchoolName() << "\t";
+    os << schoolPtr.getSchool()->get_City() << "\t";
     os << schoolPtr.getSchool()->get_APIscore() << endl;    
 }
 
@@ -257,24 +257,24 @@ int main(void)
     SchoolDataStorage schools;
     schools.readFromFile("CA_schools.txt");
 
-    int choice = 0;
+    char choice;
     do
     {
         cout << "Main Menu" << endl;
-        cout << "(1). Add new data" << endl;
-        cout << "(2). Delete data" << endl;
-        cout << "(3). Find and display one element using the primary key" << endl;
-        cout << "(4). List data in hash table sequence" << endl;
-        cout << "(5). List data in key sequence (sorted)" << endl;
-        cout << "(6). Print indented tree" << endl;
-        cout << "(7). Write data to a file" << endl;
-        cout << "(8). Hash statistics" << endl;
-        cout << "(9). Undo Delete" << endl;
-        cout << "(0). Quit" << endl;
+        cout << "(A). Add new data" << endl;
+        cout << "(D). Delete data" << endl;
+        cout << "(S). Search and display one element using the primary key" << endl;
+        cout << "(H). List data in hash table sequence" << endl;
+        cout << "(L). List data in key sequence (sorted)" << endl;
+        cout << "(T). Print indented tree" << endl;
+        cout << "(W). Write data to a file" << endl;
+        cout << "(S). Hash statistics" << endl;
+        cout << "(U). Undo Delete" << endl;
+        cout << "(Q). Quit" << endl;
         cout << endl << "Your choice: ";
         cin >> choice;
         
-        switch(choice)
+        switch(toupper(choice))
         {
             case 1:
                 schools.addNewData();
@@ -311,7 +311,7 @@ int main(void)
                 cout << "Invalid option is chosen. Please, try again" << endl;
                 break;            
         }
-    }while(choice!=0);
+    }while(choice!='Q');
 
     return 0;
 }
