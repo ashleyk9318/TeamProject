@@ -42,7 +42,6 @@ class School
 
 ostream& operator << (ostream& os, const School& input)
 {
-	// Might slightly change display format later
 	os << input.code << ", " << input.name <<  ", " << input.city	
 		<<  ", " << input.apiScore;
 	return os;
@@ -80,7 +79,6 @@ public:
 
 ostream& operator << (ostream& os, const SchoolPtrContainer& input)
 {
-	// Might slightly change display format later
 	os << *(input.getSchool());
 	return os;
 }
