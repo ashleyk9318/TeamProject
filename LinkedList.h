@@ -1,9 +1,15 @@
+// Team 6
+// Neesha B, Daksha D, Viktoriia P, Jane S, Ashley K
+// CIS 22C Fall 14
+
 #ifndef _LINKED_LIST
 #define _LINKED_LIST
 
 #include "Node.h"
 #include <string>
 #include <iostream>
+#include <sstream>
+
 using namespace std;
 
 template <class ItemType>
@@ -21,9 +27,11 @@ class LinkedList
 		void clear();
 		int getItemCount() {return itemCount;}
 		bool insert(const ItemType& newEntry);
+        bool remove(const ItemType& removedEntry);
 		bool getEntry(const ItemType& target, ItemType& returnedEntry) const;
+		bool getEntry(int index, ItemType& returnedEntry);
 		void display() const;
-		void indentedList() const;
+		string indentedList() const;
 
 };
 
@@ -57,6 +65,36 @@ bool LinkedList<ItemType>::insert(const ItemType& newEntry)
 	}
 }
 
+template <class ItemType>
+bool LinkedList<ItemType>::remove(const ItemType& removedEntry)
+{
+    if (head->getItem() == removedEntry)
+    {
+        Node<ItemType>* deletePtr = head;
+        head = head->next;
+        delete deletePtr;
+        itemCount--;
+        return true;
+    } else {
+        Node<ItemType>* nodePtr = head;
+
+	    // Traverses until it reaches end of list or finds target
+	    while(nodePtr->next != 0 && nodePtr->next->getItem() != removedEntry)
+		    nodePtr = nodePtr->next;
+
+	    if(nodePtr->next != 0 )
+	    {
+		    Node<ItemType>* deletePtr = nodePtr->next;
+            nodePtr->next = nodePtr->next->next;
+            delete deletePtr;
+            itemCount--;
+            return true;
+	    }
+    }
+
+    return false;
+}
+
 //*******************************************************
 // The clear function removes all nodes from the list.	*
 //*******************************************************
@@ -74,6 +112,27 @@ void LinkedList<ItemType>::clear()
 	}
 	itemCount = 0;
 } 
+
+//*******************************************************
+// The getEntry function looks to see if there is an    *
+// Item on the given index. The found item is returned  *
+//*******************************************************
+
+template<class ItemType>
+bool LinkedList<ItemType>::getEntry(int index, ItemType& returnedEntry)
+{
+	//if (index < itemCount || index >= itemCount)
+    if (index < 0 || index >= itemCount)
+		return false;
+
+	Node<ItemType>* current = head;
+
+	for (int i = 0; i < index; i++)
+		current = current->next;
+
+	returnedEntry = current->getItem();
+	return true;
+}
 
 //*******************************************************
 // The getEntry function looks to see if a node matches *
@@ -126,24 +185,28 @@ void LinkedList<ItemType>::display() const
 //*******************************************************
 
 template <class ItemType>
-void LinkedList<ItemType>::indentedList() const
+string LinkedList<ItemType>::indentedList() const
 {
 	Node<ItemType>* nodePtr = head;
+	
+	stringstream ss;
 
 	if(nodePtr == 0)
 	{
-		cout << "// Empty" << endl;
+		ss << "// Empty" << endl;
 	}
 	else
 	{
-		cout << nodePtr->getItem() << endl;
+		ss << nodePtr->getItem() << endl;
 		nodePtr = nodePtr->next;
 		while(nodePtr)
 		{
-			cout << "\t\t" << nodePtr->getItem() << endl;
+			ss << "\t\t" << nodePtr->getItem() << endl;
 			nodePtr = nodePtr->next;
 		}
 	}
+
+	return ss.str();
 }
 
 #endif
